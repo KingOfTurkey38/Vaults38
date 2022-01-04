@@ -1,0 +1,12 @@
+---
+name: vaults38
+version: 0.0.1
+main: kingofturkey38\vaults38\Main
+api: 4.0.3
+
+permissions:
+  vaults38.vault.1:
+    default: true
+  vaults38.edit.others:
+    default: op
+...

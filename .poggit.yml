@@ -13,4 +13,6 @@ projects:
       - src: muqsit/InvMenu/InvMenu
         version: ^4.3.2
         branch: "4.0"
+      - src: poggit/libasynql/libasynql
+        version: ~3.4.0
 ...

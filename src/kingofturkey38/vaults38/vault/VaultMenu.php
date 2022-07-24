@@ -17,7 +17,10 @@ class VaultMenu{
 
 	public function __construct(private Vault $vault){
 		$this->invMenu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
-		$this->invMenu->setName($this->vault->getusername() . " #" . $this->vault->getNumber());
+        	$this->invMenu->setName(strtr(Main::getInstance()->getConfig()->get("inventory-name", ""), [ // from https://github.com/Muqsit/PlayerVaults/blob/04d8685c94556afb43a5046f4ab59dab01046d58/src/muqsit/playervaults/database/Vault.php#L69
+            		"{PLAYER}" => $this->vault->getusername(),
+            		"{NUMBER}" => $this->vault->getNumber()
+        	]));
 
 		$this->invMenu->getInventory()->setContents($this->vault->getItems());
 

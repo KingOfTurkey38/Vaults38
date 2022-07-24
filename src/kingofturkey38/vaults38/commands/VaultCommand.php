@@ -64,7 +64,7 @@ class VaultCommand extends Command implements PluginOwned{
 
 			Await::f2c(function() use ($sender, $username, $number){
 				/** @var Vault $vault */
-				$vault = yield $this->plugin->getDatabase()->loadVault($username, $number);
+				$vault = yield from $this->plugin->getDatabase()->loadVault($username, $number);
 				$vault->getMenu()->send($sender);
 			});
 		}

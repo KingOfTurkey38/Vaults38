@@ -18,8 +18,7 @@ class Database implements IDatabase{
 	private DataConnector $database;
 
 	public function __construct(private Main $plugin){
-		$this->database = libasynql::create($this->plugin, $this->plugin->getConfig()->get("database"), ["mysql" => "queries.sql"]);
-
+		$this->database = libasynql::create($this->plugin, $this->plugin->getConfig()->get("database"), ["sqlite" => "sqlite.sql", "mysql" => "queries.sql"]);
 		$this->database->executeGeneric(IDatabase::QUERY_INIT);
 	}
 
@@ -38,7 +37,7 @@ class Database implements IDatabase{
 		$vault->setLoading(true);
 		VaultCache::addToCache($vault);
 
-		$data = yield $this->awaitSelect(self::QUERY_LOAD, ["username" => $username, "number" => $number]);
+		$data = yield from $this->awaitSelect(self::QUERY_LOAD, ["username" => $username, "number" => $number]);
 		if(isset($data[0]["data"])){
 			$items = [];
 			foreach(json_decode($data[0]["data"], true) as $k => $v){
@@ -55,7 +54,7 @@ class Database implements IDatabase{
 	public function unloadVault(Vault $vault) : void{
 		$vault->setUnloading(true);
 		Await::f2c(function() use ($vault){
-			yield $this->awaitInsert(self::QUERY_SAVE, ["username" => $vault->getusername(), "data" => json_encode($vault), "number" => $vault->getNumber()]);
+			yield from $this->awaitInsert(self::QUERY_SAVE, ["username" => $vault->getusername(), "data" => json_encode($vault->getItems()), "number" => $vault->getNumber()]);
 			VaultCache::removeFromCache($vault);
 			$vault->setUnloading(false);
 		});
